@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:new_proj/result.dart';
 import './questions.dart';
 import './answer.dart';
+import './quiz.dart';
 // void main()
 // {
 //   runApp(MyApp());
@@ -14,17 +16,17 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
-  var questionIndex = 0;
+  var _questionIndex = 0;
 
-  void answerQuestion() {
+  void _answerQuestion() {
     setState(() {
-      questionIndex = questionIndex + 1;
+      _questionIndex = _questionIndex + 1;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    var questions = [
+    var _questions = [
       {
         'questionText': 'whats your fav color?',
         'answers': ['red', 'orange', 'green', 'blue']
@@ -45,17 +47,13 @@ class MyAppState extends State<MyApp> {
         ),
         body: Container(
           margin: EdgeInsets.only(top: 180),
-          child: Column(
-            children: [
-              Questions(
-                questions[questionIndex]['questionText'],
-              ),
-              ...(questions[questionIndex]['answers'] as List<String>)
-                  .map((answer) {
-                return Answer(answerQuestion, answer);
-              }).toList(),
-            ],
-          ),
+          child: _questionIndex < _questions.length
+              ? Quiz(
+                  questionIndex: _questionIndex,
+                  answerQuestion: _answerQuestion,
+                  questions: _questions,
+                )
+              : Result(),
         ),
       ),
       debugShowCheckedModeBanner: false,
