@@ -3,6 +3,7 @@ import 'package:new_proj/result.dart';
 import './questions.dart';
 import './answer.dart';
 import './quiz.dart';
+import './result.dart';
 // void main()
 // {
 //   runApp(MyApp());
@@ -17,8 +18,10 @@ class MyApp extends StatefulWidget {
 
 class MyAppState extends State<MyApp> {
   var _questionIndex = 0;
+  var _totalSocre = 0;
+  void _answerQuestion(int score) {
+    _totalSocre += score;
 
-  void _answerQuestion() {
     setState(() {
       _questionIndex = _questionIndex + 1;
     });
@@ -26,18 +29,33 @@ class MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    var _questions = [
+    final _questions = const [
       {
         'questionText': 'whats your fav color?',
-        'answers': ['red', 'orange', 'green', 'blue']
+        'answers': [
+          {'text': 'red', 'score': 1},
+          {'text': 'white', 'score': 9},
+          {'text': 'green', 'score': 5},
+          {'text': 'blue', 'score': 4},
+        ],
       },
       {
         'questionText': 'whats your fav animal?',
-        'answers': ['rabbit', 'dog', 'goat', 'blue whale']
+        'answers': [
+          {'text': 'rabbit', 'score': 12},
+          {'text': 'dog', 'score': 8},
+          {'text': 'goat', 'score': 9},
+          {'text': 'you', 'score': 6},
+        ],
       },
       {
         'questionText': 'whats your fav role?',
-        'answers': ['student', 'teacher', 'can\'t say', 'all']
+        'answers': [
+          {'text': 'student', 'score': 5},
+          {'text': 'teacher', 'score': 3},
+          {'text': 'vela', 'score': 8},
+          {'text': 'busy', 'score': 6},
+        ],
       },
     ];
     return MaterialApp(
@@ -53,7 +71,7 @@ class MyAppState extends State<MyApp> {
                   answerQuestion: _answerQuestion,
                   questions: _questions,
                 )
-              : Result(),
+              : Result(_totalSocre),
         ),
       ),
       debugShowCheckedModeBanner: false,
