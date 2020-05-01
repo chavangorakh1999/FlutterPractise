@@ -27,6 +27,13 @@ class MyAppState extends State<MyApp> {
     });
   }
 
+  void _restartQuiz(){
+    setState(() {
+      _questionIndex=0;
+      _totalSocre=0;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final _questions = const [
@@ -71,7 +78,7 @@ class MyAppState extends State<MyApp> {
                   answerQuestion: _answerQuestion,
                   questions: _questions,
                 )
-              : Result(_totalSocre),
+              : Result(_totalSocre,_restartQuiz),
         ),
       ),
       debugShowCheckedModeBanner: false,
