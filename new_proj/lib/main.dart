@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:new_proj/result.dart';
-import './questions.dart';
-import './answer.dart';
+// import './questions.dart';
+// import './answer.dart';
 import './quiz.dart';
 import './result.dart';
 // void main()
@@ -71,7 +71,7 @@ class MyAppState extends State<MyApp> {
           title: Text('FIRST APP'),
         ),
         body: Container(
-          margin: EdgeInsets.only(top: 180),
+          // margin: EdgeInsets.only(top: 180),
           child: _questionIndex < _questions.length
               ? Quiz(
                   questionIndex: _questionIndex,
