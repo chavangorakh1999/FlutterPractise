@@ -11,9 +11,27 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Personal Expences',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.purple,
+        accentColor: Colors.amber,
+        fontFamily: 'Quicksand',
+        textTheme: ThemeData.light().textTheme.copyWith(
+                title: TextStyle(
+                  fontFamily: 'OpenSans',
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+        appBarTheme: AppBarTheme(
+          textTheme: ThemeData.light().textTheme.copyWith(
+                title: TextStyle(
+                  fontFamily: 'OpenSans',
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+        ),
       ),
       home: MyHomePage(),
     );
@@ -29,18 +47,18 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _userTransactions = [
-    Transaction(
-      id: 't1',
-      tittle: 'new shoes',
-      amount: 44.5,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 't2',
-      tittle: 'Maid',
-      amount: 55.5,
-      date: DateTime.now(),
-    ),
+    // Transaction(
+    //   id: 't1',
+    //   tittle: 'new shoes',
+    //   amount: 44.5,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: 't2',
+    //   tittle: 'Maid',
+    //   amount: 55.5,
+    //   date: DateTime.now(),
+    // ),
   ];
   void _addNewTransaction(String txTittle, double txAmount) {
     final newTx = Transaction(
@@ -71,7 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('MyExpences'),
+        title: Text('Personal Expences'),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add),
@@ -86,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             Container(
               width: double.infinity,
-              color: Colors.blue,
+              // color: Colors.blue,
               child: Card(
                 child: Text('Chart!'),
                 elevation: 10,
