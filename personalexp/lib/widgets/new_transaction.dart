@@ -1,12 +1,31 @@
 import 'package:flutter/material.dart';
 import './new_transaction.dart';
-import './user_transactions.dart';
 
-class NewTRansaction extends StatelessWidget {
+class NewTRansaction extends StatefulWidget {
   final addTx;
-  final tittleController = TextEditingController();
-  final amountController = TextEditingController();
+
   NewTRansaction(this.addTx);
+
+  @override
+  _NewTRansactionState createState() => _NewTRansactionState();
+}
+
+class _NewTRansactionState extends State<NewTRansaction> {
+  final tittleController = TextEditingController();
+
+  final amountController = TextEditingController();
+
+  void submitData(){
+    final enteredTittle=tittleController.text;
+    final enteredAmount=double.parse(amountController.text);
+    if(enteredTittle.isEmpty || enteredAmount<=0 )
+    {
+      return;
+    }
+     widget.addTx(enteredTittle,enteredAmount);
+     Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -18,22 +37,20 @@ class NewTRansaction extends StatelessWidget {
               decoration: InputDecoration(labelText: 'Tittle'),
               // onChanged: (val) => tittleInput = val,
               controller: tittleController,
+              onSubmitted: (_)=>submitData(),
             ),
             TextField(
               decoration: InputDecoration(labelText: 'Amount'),
               // onChanged: (val) => amountInput = val,
               controller: amountController,
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              onSubmitted: (_)=>submitData(),
             ),
             FlatButton(
               child: Text('Sumbit'),
               textColor: Colors.white,
               color: Colors.purple,
-              onPressed: () {
-                addTx(
-                  tittleController.text,
-                  double.parse(amountController.text),
-                );
-              },
+              onPressed: submitData,
             )
           ],
         ),
