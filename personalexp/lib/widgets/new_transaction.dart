@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import './new_transaction.dart';
+import 'package:intl/intl.dart';
 
 class NewTRansaction extends StatefulWidget {
   final addTx;
@@ -11,19 +12,37 @@ class NewTRansaction extends StatefulWidget {
 }
 
 class _NewTRansactionState extends State<NewTRansaction> {
-  final tittleController = TextEditingController();
+  final _tittleController = TextEditingController();
 
-  final amountController = TextEditingController();
+  final _amountController = TextEditingController();
+  DateTime _selectedDate;
 
-  void submitData(){
-    final enteredTittle=tittleController.text;
-    final enteredAmount=double.parse(amountController.text);
-    if(enteredTittle.isEmpty || enteredAmount<=0 )
-    {
+  void _submitData() {
+    final enteredTittle = _tittleController.text;
+    final enteredAmount = double.parse(_amountController.text);
+    if (enteredTittle.isEmpty || enteredAmount <= 0||_selectedDate==null) {
       return;
     }
-     widget.addTx(enteredTittle,enteredAmount);
-     Navigator.of(context).pop();
+    widget.addTx(enteredTittle, enteredAmount,_selectedDate);
+    Navigator.of(context).pop();
+  }
+
+  void _percentDatePicker() {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2019),
+      lastDate: DateTime.now(),
+    ).then(
+      (pickedDate) {
+        if (pickedDate == null) {
+          return;
+        } 
+         setState(() {
+           _selectedDate = pickedDate;
+         }); 
+      },
+    );
   }
 
   @override
@@ -36,21 +55,43 @@ class _NewTRansactionState extends State<NewTRansaction> {
             TextField(
               decoration: InputDecoration(labelText: 'Tittle'),
               // onChanged: (val) => tittleInput = val,
-              controller: tittleController,
-              onSubmitted: (_)=>submitData(),
+              controller: _tittleController,
+              onSubmitted: (_) => _submitData(),
             ),
             TextField(
               decoration: InputDecoration(labelText: 'Amount'),
               // onChanged: (val) => amountInput = val,
-              controller: amountController,
+              controller: _amountController,
               keyboardType: TextInputType.numberWithOptions(decimal: true),
-              onSubmitted: (_)=>submitData(),
+              onSubmitted: (_) => _submitData(),
+            ),
+            Container(
+              height: 70,
+              child: Row(
+                children: <Widget>[
+                  Container(
+                    child: Text(
+                      _selectedDate == null
+                          ? 'No date selected'
+                          :'Selected Date: ${DateFormat.yMd().format(_selectedDate)}',
+                    ),
+                  ),
+                  Expanded(
+                        child: FlatButton(
+                        onPressed: _percentDatePicker,
+                        child: Text(
+                          'Choose Date',
+                          style: Theme.of(context).textTheme.button,
+                        )),
+                  ),
+                ],
+              ),
             ),
             FlatButton(
               child: Text('Sumbit'),
               textColor: Colors.white,
               color: Colors.purple,
-              onPressed: submitData,
+              onPressed: _submitData,
             )
           ],
         ),
