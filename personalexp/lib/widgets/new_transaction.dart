@@ -20,10 +20,10 @@ class _NewTRansactionState extends State<NewTRansaction> {
   void _submitData() {
     final enteredTittle = _tittleController.text;
     final enteredAmount = double.parse(_amountController.text);
-    if (enteredTittle.isEmpty || enteredAmount <= 0||_selectedDate==null) {
+    if (enteredTittle.isEmpty || enteredAmount <= 0 || _selectedDate == null) {
       return;
     }
-    widget.addTx(enteredTittle, enteredAmount,_selectedDate);
+    widget.addTx(enteredTittle, enteredAmount, _selectedDate);
     Navigator.of(context).pop();
   }
 
@@ -37,63 +37,72 @@ class _NewTRansactionState extends State<NewTRansaction> {
       (pickedDate) {
         if (pickedDate == null) {
           return;
-        } 
-         setState(() {
-           _selectedDate = pickedDate;
-         }); 
+        }
+        setState(() {
+          _selectedDate = pickedDate;
+        });
       },
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: <Widget>[
-            TextField(
-              decoration: InputDecoration(labelText: 'Tittle'),
-              // onChanged: (val) => tittleInput = val,
-              controller: _tittleController,
-              onSubmitted: (_) => _submitData(),
-            ),
-            TextField(
-              decoration: InputDecoration(labelText: 'Amount'),
-              // onChanged: (val) => amountInput = val,
-              controller: _amountController,
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
-              onSubmitted: (_) => _submitData(),
-            ),
-            Container(
-              height: 70,
-              child: Row(
-                children: <Widget>[
-                  Container(
-                    child: Text(
-                      _selectedDate == null
-                          ? 'No date selected'
-                          :'Selected Date: ${DateFormat.yMd().format(_selectedDate)}',
-                    ),
-                  ),
-                  Expanded(
-                        child: FlatButton(
-                        onPressed: _percentDatePicker,
-                        child: Text(
-                          'Choose Date',
-                          style: Theme.of(context).textTheme.button,
-                        )),
-                  ),
-                ],
+    return SingleChildScrollView(
+          child: Card(
+        elevation: 5,
+        child: Container(
+          padding: EdgeInsets.only(
+            top: 10,
+            left: 10,
+            right: 10,
+            bottom: MediaQuery.of(context).viewInsets.bottom+10,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              TextField(
+                decoration: InputDecoration(labelText: 'Tittle'),
+                // onChanged: (val) => tittleInput = val,
+                controller: _tittleController,
+                onSubmitted: (_) => _submitData(),
               ),
-            ),
-            FlatButton(
-              child: Text('Sumbit'),
-              textColor: Colors.white,
-              color: Colors.purple,
-              onPressed: _submitData,
-            )
-          ],
+              TextField(
+                decoration: InputDecoration(labelText: 'Amount'),
+                // onChanged: (val) => amountInput = val,
+                controller: _amountController,
+                keyboardType: TextInputType.numberWithOptions(decimal: true),
+                onSubmitted: (_) => _submitData(),
+              ),
+              Container(
+                height: 70,
+                child: Row(
+                  children: <Widget>[
+                    Container(
+                      child: Text(
+                        _selectedDate == null
+                            ? 'No date selected'
+                            : 'Selected Date: ${DateFormat.yMd().format(_selectedDate)}',
+                      ),
+                    ),
+                    Expanded(
+                      child: FlatButton(
+                          onPressed: _percentDatePicker,
+                          child: Text(
+                            'Choose Date',
+                            style: Theme.of(context).textTheme.button,
+                          )),
+                    ),
+                  ],
+                ),
+              ),
+              FlatButton(
+                child: Text('Sumbit'),
+                textColor: Colors.white,
+                color: Colors.purple,
+                onPressed: _submitData,
+              )
+            ],
+          ),
         ),
       ),
     );

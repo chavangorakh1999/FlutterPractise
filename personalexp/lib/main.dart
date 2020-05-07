@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import './widgets/new_transaction.dart';
 import './widgets/tansaction_list.dart';
 import './widgets/chart.dart';
 import './models/transaction.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  // WidgetsFlutterBinding.ensureInitialized();
+  // SystemChrome.setPreferredOrientations(
+  //   [
+  //     DeviceOrientation.portraitUp,
+  //     DeviceOrientation.portraitDown,
+  //   ],
+  // );
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -77,11 +86,13 @@ class _MyHomePageState extends State<MyHomePage> {
     }).toList();
   }
 
-  void _addNewTransaction(String txTittle, double txAmount,DateTime txdate) {
+  bool _showChart=false; 
+
+  void _addNewTransaction(String txTittle, double txAmount, DateTime txdate) {
     final newTx = Transaction(
       tittle: txTittle,
       amount: txAmount,
-      date: txdate ,
+      date: txdate,
       id: DateTime.now().toString(),
     );
     setState(() {
@@ -102,31 +113,64 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void _deleteTranaction(String id){
+  void _deleteTranaction(String id) {
     setState(() {
-      _userTransactions.removeWhere((tx)=> tx.id==id);
+      _userTransactions.removeWhere((tx) => tx.id == id);
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final isLandscape=MediaQuery.of(context).orientation==Orientation.landscape;
+    final appBar = AppBar(
+      title: Text('Personal Expences'),
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.add),
+          onPressed: () => _startAddNewTransaction(context),
+        ),
+      ],
+    );
+
+  final txList= Container(
+                height: (MediaQuery.of(context).size.height -
+                        appBar.preferredSize.height -
+                        MediaQuery.of(context).padding.top) *
+                    0.7,
+                child: TransactionList(_userTransactions, _deleteTranaction));
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Personal Expences'),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () => _startAddNewTransaction(context),
-          ),
-        ],
-      ),
+      appBar: appBar,
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Chart(_recentTransaction),
-            TransactionList(_userTransactions,_deleteTranaction),
+            if(isLandscape) Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text('Show Chart'),
+                Switch(value: _showChart, onChanged: (val){
+                  setState(() {
+                    _showChart=val;
+                  });
+                }),
+              ],
+            ),
+            if(!isLandscape) Container(
+                height: (MediaQuery.of(context).size.height -
+                        appBar.preferredSize.height -
+                        MediaQuery.of(context).padding.top) *
+                    0.3,
+                child: Chart(_recentTransaction)),
+            if(!isLandscape) txList,
+            if(isLandscape)
+            _showChart? Container(
+                height: (MediaQuery.of(context).size.height -
+                        appBar.preferredSize.height -
+                        MediaQuery.of(context).padding.top) *
+                    0.7,
+                child: Chart(_recentTransaction)): txList,
+            
           ],
         ),
       ),
@@ -135,7 +179,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: IconButton(
           icon: Icon(Icons.add),
           onPressed: () => _startAddNewTransaction(context),
-        ),
+        ), onPressed: () {},
       ),
     );
   }
