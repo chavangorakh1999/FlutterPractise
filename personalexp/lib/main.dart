@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
         accentColor: Colors.amber,
         fontFamily: 'Quicksand',
         textTheme: ThemeData.light().textTheme.copyWith(
-              title: TextStyle(
+              headline6: TextStyle(
                 fontFamily: 'OpenSans',
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
             ),
         appBarTheme: AppBarTheme(
           textTheme: ThemeData.light().textTheme.copyWith(
-                title: TextStyle(
+                headline6: TextStyle(
                   fontFamily: 'OpenSans',
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -154,7 +154,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 MediaQuery.of(context).padding.top) *
             0.7,
         child: TransactionList(_userTransactions, _deleteTranaction));
-    final ScrolView = SingleChildScrollView(
+    final ScrolView =SafeArea(child:SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -163,7 +163,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text('Show Chart'),
+                Text('Show Chart',style: Theme.of(context).textTheme.headline6,),
                 Switch.adaptive(
                     activeColor: Theme.of(context).primaryColor,
                     value: _showChart,
@@ -193,7 +193,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 : txList,
         ],
       ),
-    );
+    ));
     return Platform.isIOS
         ? CupertinoPageScaffold(
             child: ScrolView,
