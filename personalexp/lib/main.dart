@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
-// import 'package:flutter/services.dart';
-// import 'package:intl/intl.dart';
 import './widgets/new_transaction.dart';
 import './widgets/tansaction_list.dart';
 import './widgets/chart.dart';
@@ -154,7 +152,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 MediaQuery.of(context).padding.top) *
             0.7,
         child: TransactionList(_userTransactions, _deleteTranaction));
-    final ScrolView =SafeArea(child:SingleChildScrollView(
+    final scrolView =SafeArea(child:SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -196,12 +194,12 @@ class _MyHomePageState extends State<MyHomePage> {
     ));
     return Platform.isIOS
         ? CupertinoPageScaffold(
-            child: ScrolView,
+            child: scrolView,
             navigationBar: appBar,
           )
         : Scaffold(
             appBar: appBar,
-            body: ScrolView,
+            body: scrolView,
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerFloat,
             floatingActionButton: Platform.isIOS

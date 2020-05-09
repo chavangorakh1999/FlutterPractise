@@ -1,5 +1,9 @@
+// import 'dart:html';
+import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import './new_transaction.dart';
+import '../widgets/adaptive_flat_button.dart';
+// import './new_transaction.dart';
 import 'package:intl/intl.dart';
 
 class NewTRansaction extends StatefulWidget {
@@ -48,14 +52,14 @@ class _NewTRansactionState extends State<NewTRansaction> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-          child: Card(
+      child: Card(
         elevation: 5,
         child: Container(
           padding: EdgeInsets.only(
             top: 10,
             left: 10,
             right: 10,
-            bottom: MediaQuery.of(context).viewInsets.bottom+10,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 10,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -77,25 +81,26 @@ class _NewTRansactionState extends State<NewTRansaction> {
                 height: 70,
                 child: Row(
                   children: <Widget>[
-                    Container(
-                      child: Text(
-                        _selectedDate == null
-                            ? 'No date selected'
-                            : 'Selected Date: ${DateFormat.yMd().format(_selectedDate)}',
+                    Expanded(
+                        child: Container(
+                        child: Text(
+                          _selectedDate == null
+                              ? 'No date selected'
+                              : 'Selected Date: ${DateFormat.yMd().format(_selectedDate)}',
+                        ),
                       ),
                     ),
-                    Expanded(
-                      child: FlatButton(
-                          onPressed: _percentDatePicker,
-                          child: Text(
-                            'Choose Date',
-                            style: Theme.of(context).textTheme.button,
-                          )),
-                    ),
+                    AdaptiveFLatButton('Choose Date',_percentDatePicker),
+                    
                   ],
                 ),
               ),
-              FlatButton(
+             Platform.isIOS? CupertinoButton(
+               child: Text('Sumbit'),
+                // textColor: Colors.white,
+                color: Colors.purple,
+                onPressed: _submitData,
+             ):FlatButton(
                 child: Text('Sumbit'),
                 textColor: Colors.white,
                 color: Colors.purple,
