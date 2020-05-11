@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Personal Expences',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.purple,
         accentColor: Colors.amber,
@@ -119,13 +120,58 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final isLandscape =
-        MediaQuery.of(context).orientation == Orientation.landscape;
-    final PreferredSizeWidget appBar = Platform.isIOS
-        ? CupertinoNavigationBar(
-            middle: Text('Personal Expences'),
+  List<Widget> _buildPotraitContent(
+    MediaQueryData mediaQuery,
+    PreferredSizeWidget appBar,
+    Widget txList,
+  ) {
+    return [
+      Container(
+        height: (mediaQuery.size.height -
+                appBar.preferredSize.height -
+                mediaQuery.padding.top) *
+            0.3,
+        child: Chart(_recentTransaction),
+      ),
+      txList
+    ];
+  }
+
+  List<Widget> _buildLandSacpeContent(MediaQueryData mediaQuery,
+    PreferredSizeWidget appBar,
+    Widget txList,) 
+    {
+    return [Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          'Show Chart',
+          style: Theme.of(context).textTheme.headline6,
+        ),
+        Switch.adaptive(
+            activeColor: Theme.of(context).primaryColor,
+            value: _showChart,
+            onChanged: (val) {
+              setState(() {
+                _showChart = val;
+              });
+            }),
+      ],
+    ), _showChart
+                ? Container(
+                    height: (mediaQuery.size.height -
+                            appBar.preferredSize.height -
+                            mediaQuery.padding.top) *
+                        0.7,
+                    child: Chart(_recentTransaction))
+                : txList];
+  }
+Widget _isIos()
+{
+  return CupertinoNavigationBar(
+            middle: const Text(
+              'Personal Expences',
+            ),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
@@ -135,9 +181,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 )
               ],
             ),
-          )
-        : AppBar(
-            title: Text('Personal Expences'),
+          ) ;
+}
+Widget _isAndroid()
+{
+  return AppBar(
+            title: const Text('Personal Expences'),
             actions: <Widget>[
               IconButton(
                 icon: Icon(Icons.add),
@@ -145,50 +194,36 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ],
           );
+}
+  @override
+  Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+    final isLandscape = mediaQuery.orientation == Orientation.landscape;
+    final PreferredSizeWidget appBar = Platform.isIOS
+        ? _isIos()
+        : _isAndroid();
 
     final txList = Container(
-        height: (MediaQuery.of(context).size.height -
+        height: (mediaQuery.size.height -
                 appBar.preferredSize.height -
-                MediaQuery.of(context).padding.top) *
+                mediaQuery.padding.top) *
             0.7,
         child: TransactionList(_userTransactions, _deleteTranaction));
-    final scrolView =SafeArea(child:SingleChildScrollView(
+    final scrolView = SafeArea(
+        child: SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          if (isLandscape)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text('Show Chart',style: Theme.of(context).textTheme.headline6,),
-                Switch.adaptive(
-                    activeColor: Theme.of(context).primaryColor,
-                    value: _showChart,
-                    onChanged: (val) {
-                      setState(() {
-                        _showChart = val;
-                      });
-                    }),
-              ],
-            ),
+          if (isLandscape) ..._buildLandSacpeContent(mediaQuery,
+              appBar,
+              txList,),
           if (!isLandscape)
-            Container(
-                height: (MediaQuery.of(context).size.height -
-                        appBar.preferredSize.height -
-                        MediaQuery.of(context).padding.top) *
-                    0.3,
-                child: Chart(_recentTransaction)),
-          if (!isLandscape) txList,
-          if (isLandscape)
-            _showChart
-                ? Container(
-                    height: (MediaQuery.of(context).size.height -
-                            appBar.preferredSize.height -
-                            MediaQuery.of(context).padding.top) *
-                        0.7,
-                    child: Chart(_recentTransaction))
-                : txList,
+            ..._buildPotraitContent(
+              mediaQuery,
+              appBar,
+              txList,
+            ),
         ],
       ),
     ));
@@ -205,11 +240,8 @@ class _MyHomePageState extends State<MyHomePage> {
             floatingActionButton: Platform.isIOS
                 ? Container()
                 : FloatingActionButton(
-                    child: IconButton(
-                      icon: Icon(Icons.add),
-                      onPressed: () => _startAddNewTransaction(context),
-                    ),
-                    onPressed: () {},
+                    child: Icon(Icons.add),
+                    onPressed: () => _startAddNewTransaction(context),
                   ),
           );
   }

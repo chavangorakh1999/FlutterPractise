@@ -1,5 +1,5 @@
 // import 'dart:html';
-import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../widgets/adaptive_flat_button.dart';
@@ -7,7 +7,7 @@ import '../widgets/adaptive_flat_button.dart';
 import 'package:intl/intl.dart';
 
 class NewTRansaction extends StatefulWidget {
-  final addTx;
+  final Function addTx;
 
   NewTRansaction(this.addTx);
 
@@ -22,12 +22,19 @@ class _NewTRansactionState extends State<NewTRansaction> {
   DateTime _selectedDate;
 
   void _submitData() {
+    if (_amountController.text.isEmpty) {
+      return;
+    }
     final enteredTittle = _tittleController.text;
     final enteredAmount = double.parse(_amountController.text);
     if (enteredTittle.isEmpty || enteredAmount <= 0 || _selectedDate == null) {
       return;
     }
-    widget.addTx(enteredTittle, enteredAmount, _selectedDate);
+    widget.addTx(
+      enteredTittle,
+      enteredAmount,
+      _selectedDate,
+    );
     Navigator.of(context).pop();
   }
 
@@ -37,16 +44,14 @@ class _NewTRansactionState extends State<NewTRansaction> {
       initialDate: DateTime.now(),
       firstDate: DateTime(2019),
       lastDate: DateTime.now(),
-    ).then(
-      (pickedDate) {
-        if (pickedDate == null) {
-          return;
-        }
-        setState(() {
-          _selectedDate = pickedDate;
-        });
-      },
-    );
+    ).then((pickedDate) {
+      if (pickedDate == null) {
+        return;
+      }
+      setState(() {
+        _selectedDate = pickedDate;
+      });
+    });
   }
 
   @override
@@ -74,7 +79,7 @@ class _NewTRansactionState extends State<NewTRansaction> {
                 decoration: InputDecoration(labelText: 'Amount'),
                 // onChanged: (val) => amountInput = val,
                 controller: _amountController,
-                keyboardType: TextInputType.numberWithOptions(decimal: true),
+                keyboardType: TextInputType.number,
                 onSubmitted: (_) => _submitData(),
               ),
               Container(
@@ -82,7 +87,7 @@ class _NewTRansactionState extends State<NewTRansaction> {
                 child: Row(
                   children: <Widget>[
                     Expanded(
-                        child: Container(
+                      child: Container(
                         child: Text(
                           _selectedDate == null
                               ? 'No date selected'
@@ -90,20 +95,14 @@ class _NewTRansactionState extends State<NewTRansaction> {
                         ),
                       ),
                     ),
-                    AdaptiveFLatButton('Choose Date',_percentDatePicker),
-                    
+                    AdaptiveFLatButton('Choose Date', _percentDatePicker),
                   ],
                 ),
               ),
-             Platform.isIOS? CupertinoButton(
-               child: Text('Sumbit'),
-                // textColor: Colors.white,
-                color: Colors.purple,
-                onPressed: _submitData,
-             ):FlatButton(
-                child: Text('Sumbit'),
+              RaisedButton(
+                child:const Text('Sumbit'),
+                color: Theme.of(context).primaryColor,
                 textColor: Colors.white,
-                color: Colors.purple,
                 onPressed: _submitData,
               )
             ],
