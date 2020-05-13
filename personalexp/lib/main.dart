@@ -62,7 +62,7 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage>  with WidgetsBindingObserver{
   final List<Transaction> _userTransactions = [
     // Transaction(
     //   id: 't1',
@@ -89,6 +89,21 @@ class _MyHomePageState extends State<MyHomePage> {
 
   bool _showChart = false;
 
+ @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+  }
+  void didChangeAppLifecycleState(AppLifecycleState state)
+  {
+    print(state);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
   void _addNewTransaction(String txTittle, double txAmount, DateTime txdate) {
     final newTx = Transaction(
       tittle: txTittle,
@@ -104,7 +119,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void _startAddNewTransaction(BuildContext ctx) {
     showModalBottomSheet(
       context: ctx,
-      builder: (_) {
+      builder: (context) {
         return GestureDetector(
           onTap: () {},
           child: NewTRansaction(_addNewTransaction),
@@ -195,6 +210,7 @@ Widget _isAndroid()
             ],
           );
 }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
