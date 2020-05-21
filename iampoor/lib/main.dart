@@ -9,23 +9,40 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    final appBar=AppBar(
-        title: Text('I am rich'),
-        backgroundColor: Colors.blueGrey[900],
-      );
-    return MaterialApp(
-        home: Scaffold(
-      appBar: appBar,
-      body: Center(
-        child: Container(
-          height: 900,
-          child: Image(
-            image: AssetImage('assets/images/background.jpg'),
-            fit: BoxFit.cover,
+    return MaterialApp(home: MyHomePage());
+  }
+}
+
+class MyHomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+    return Scaffold(
+      body: Stack(
+        children: [
+          Container(
+              height: mediaQuery.size.height,
+              width: mediaQuery.size.width,
+              decoration: BoxDecoration(
+                color: Color.fromRGBO(0, 250, 154, 1),
+                borderRadius: BorderRadius.all(Radius.circular(40)),
+              ),
+            ),
+          
+          Positioned(
+            top: 150,
+            
+            child: Container(
+            height: mediaQuery.size.height,
+            width: mediaQuery.size.width,
+            decoration: BoxDecoration(
+              color: Colors.black,
+              borderRadius: BorderRadius.all(Radius.circular(40)),
+            ),
           ),
-        ),
+          ),
+        ],
       ),
-      backgroundColor: Colors.blueGrey,
-    ));
+    );
   }
 }
