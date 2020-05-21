@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import './component/movie_list.dart';
-import './screens/movie_detail.dart';
-import './service/movie_service.dart';
-import './model/movie.dart';
+import '../component/movie_list.dart';
+import 'movie_detail.dart';
+import '../service/movie_service.dart';
+import '../model/movie.dart';
 import 'package:flutter/services.dart';
 
 
